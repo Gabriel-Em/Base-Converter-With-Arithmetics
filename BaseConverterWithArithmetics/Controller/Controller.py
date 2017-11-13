@@ -1,8 +1,9 @@
-'''
-Created on Nov 13, 2017
+from Model.Number import Number
 
-@author: Gabriel Em
-'''
 class Controller:
     def __init__(self):
         pass
+    
+    def convert(self, strNumber, sourceBase, destinationBase):
+        number = Number(strNumber, sourceBase)
+        #to be continued tomorow

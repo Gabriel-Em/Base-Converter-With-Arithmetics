@@ -1,9 +1,3 @@
-'''
-Created on Nov 13, 2017
-
-@author: Gabriel Em
-'''
-
 import os
 from Validator.Validator import Validator
 
@@ -25,8 +19,6 @@ class UI:
     def _arithmeticsMenu(self):
         menuOptions = {1:["1.Addition", self._Addition],2:["2.Subtraction", self._Subtraction],3:["3.Multiplication", self._Multiplication],4:["4.Division", self._Division]}
         self._runMenu(menuOptions, False)
-
-    # Menu methods
     
     def _runMenu(self, menuOptions, isMainMenu):
         opt = -1
@@ -36,9 +28,40 @@ class UI:
             opt = self._readOption(len(menuOptions))
             if opt in menuOptions:
                 menuOptions[opt][1]()
-                
+        
+
+    # Conversion menu methods
+    
+    def _DirectConversions(self):
+        sourceBase = self._readBase("\nChoose a base (2 to 16): ")
+        strNumber = self._readNumber(sourceBase)
+        destinationBase = self._readBase("\nChoose a base (2 to 16) to which the number should be converted: ")
+        
+        while sourceBase == destinationBase:
+            print("The two bases must not be the same!")
+            destinationBase = self._readBase("\nChoose a base (2 to 16) to which the number should be converted: ")
+        
+        convertedNumber = self._controller.convert(strNumber, sourceBase, destinationBase)
+        
+    def _IndirectConversions(self):
+        pass
+    def _QuickConversions(self):
+        pass
+    
+    # Arithmetics menu methods
+    
+    def _Addition(self):
+        pass
+    def _Subtraction(self):
+        pass
+    def _Multiplication(self):
+        pass
+    def _Division(self):
+        pass
+
+    # Reads
+    
     def _readOption(self, maxValue):
-        opt = -1
         validOption = False
         
         while validOption == False:
@@ -53,7 +76,37 @@ class UI:
                 validOption = True
     
         return int(opt)
+
+    def _readBase(self, message):
+        validBase = False
         
+        while validBase == False:
+            base = input(message)
+            validationCode = self._validator.checkValidBase(base)
+            
+            if validationCode == -1:
+                print("The base must be an integer!")
+            elif validationCode == -2:
+                print("The base must be >= 2 and <= 16.")
+            else:
+                validBase = True
+    
+        return int(base)
+
+    def _readNumber(self, base):
+        validNumber = False
+        
+        while validNumber == False:
+            number = input("\nChoose a number in base " + str(base) + ": ")
+            if self._validator.checkValidNumber(number, base) == False:
+                print("That number is not written in base " + str(base) + "!")
+            else:
+                validNumber = True
+    
+        return number
+    
+    # Prints
+    
     def _printMenu(self, menuOptions, isMainMenu):
         os.system('CLS')        
         self._printTitle()
@@ -72,23 +125,4 @@ class UI:
                                       >>> Base converter with arithmetics <<<
 '''
         print(title)
-
-    # Conversion menu methods
     
-    def _DirectConversions(self):
-        pass
-    def _IndirectConversions(self):
-        pass
-    def _QuickConversions(self):
-        pass
-    
-    # Arithmetics menu methods
-    
-    def _Addition(self):
-        pass
-    def _Subtraction(self):
-        pass
-    def _Multiplication(self):
-        pass
-    def _Division(self):
-        pass

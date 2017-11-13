@@ -1,8 +1,3 @@
-'''
-Created on Nov 13, 2017
-
-@author: Gabriel Em
-'''
 class Validator:
     def __init__(self):
         pass
@@ -21,3 +16,21 @@ class Validator:
             return -2
         else:
             return 0
+
+    def checkValidBase(self, value):
+        if self.checkInt(value) == False:
+            return -1
+        elif int(value) < 2 or int(value) > 16:
+            return -2
+        else:
+            return 0
+    
+    def checkValidNumber(self, number, base):
+        baseDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+        
+        for digit in number:
+            if digit not in baseDigits:
+                return False
+            elif baseDigits.index(digit) >= base:
+                return False
+        return True

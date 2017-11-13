@@ -1,8 +1,3 @@
-'''
-Created on Nov 13, 2017
-
-@author: Gabriel Em
-'''
 class Number:
     def __init__(self, value, base):
         self._digitsAsListOfInt = self._valueToListInt(value)
