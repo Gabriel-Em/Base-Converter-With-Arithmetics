@@ -28,9 +28,18 @@ class Validator:
     def checkValidNumber(self, number, base):
         baseDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
         
+        while number != "" and number[0] == ' ':
+            number = number[1:]
+        
+        if number == "":
+            return -1
+        
+        if number[0] == '-' or number[0] == '+':
+            number = number[1:]
+            
         for digit in number:
             if digit not in baseDigits:
-                return False
+                return -2
             elif baseDigits.index(digit) >= base:
-                return False
-        return True
+                return -2
+        return 0

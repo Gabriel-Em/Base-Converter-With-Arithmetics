@@ -1,23 +1,21 @@
 import os
-from Validator.Validator import Validator
 
 class UI:
     def __init__(self, controller):
         self._controller = controller
-        self._validator = Validator()
     
     # Menus
     
     def mainMenu(self):
-        menuOptions = {1:["1.Conversions", self._convertionsMenu],2:["2.Arithmetics", self._arithmeticsMenu]}
+        menuOptions = {1:["1.Conversions", self._convertionsMenu], 2:["2.Arithmetics", self._arithmeticsMenu]}
         self._runMenu(menuOptions, True)
 
     def _convertionsMenu(self):
-        menuOptions = {1:["1.Direct conversions", self._DirectConversions],2:["2.Conversions using an intermediary base", self._IndirectConversions],3:["3.Quick conversions between bases that are powers of 2", self._QuickConversions]}
+        menuOptions = {1:["1.Direct conversions", self._DirectConversions], 2:["2.Conversions using an intermediary base", self._IndirectConversions], 3:["3.Quick conversions between bases that are powers of 2", self._QuickConversions]}
         self._runMenu(menuOptions, False)
 
     def _arithmeticsMenu(self):
-        menuOptions = {1:["1.Addition", self._Addition],2:["2.Subtraction", self._Subtraction],3:["3.Multiplication", self._Multiplication],4:["4.Division", self._Division]}
+        menuOptions = {1:["1.Addition", self._Addition], 2:["2.Subtraction", self._Subtraction], 3:["3.Multiplication", self._Multiplication], 4:["4.Division", self._Division]}
         self._runMenu(menuOptions, False)
     
     def _runMenu(self, menuOptions, isMainMenu):
@@ -41,7 +39,11 @@ class UI:
             print("The two bases must not be the same!")
             destinationBase = self._readBase("\nChoose a base (2 to 16) to which the number should be converted: ")
         
-        convertedNumber = self._controller.convert(strNumber, sourceBase, destinationBase)
+        convertedNumber = self._controller.convertDirectly(strNumber, sourceBase, destinationBase)
+        os.system('CLS')
+        self._printTitle()
+        print("The number " + strNumber + " converted from base " + str(sourceBase) + " to base " + str(destinationBase) + " is " + str(convertedNumber))
+        input("\n\nPress Enter to continue...")
         
     def _IndirectConversions(self):
         pass
@@ -66,7 +68,7 @@ class UI:
         
         while validOption == False:
             opt = input("\nChoose an option: ")
-            validationCode = self._validator.checkValidOption(opt, maxValue)
+            validationCode = self._controller.checkValidOption(opt, maxValue)
             
             if validationCode == -1:
                 print("The option must be an integer!")
@@ -82,7 +84,7 @@ class UI:
         
         while validBase == False:
             base = input(message)
-            validationCode = self._validator.checkValidBase(base)
+            validationCode = self._controller.checkValidBase(base)
             
             if validationCode == -1:
                 print("The base must be an integer!")
@@ -98,7 +100,11 @@ class UI:
         
         while validNumber == False:
             number = input("\nChoose a number in base " + str(base) + ": ")
-            if self._validator.checkValidNumber(number, base) == False:
+            validationCode = self._controller.checkValidNumber(number, base)
+            
+            if validationCode == -1:
+                print("The number can't be zero or null.")
+            elif validationCode == -2:
                 print("That number is not written in base " + str(base) + "!")
             else:
                 validNumber = True
