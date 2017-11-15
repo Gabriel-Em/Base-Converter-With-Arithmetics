@@ -33,18 +33,24 @@ class Controller:
             power += 1
         
         if len(listOfTerms) == 0:
-            return Number("0", destinationBase)
+            return "0"
         elif len(listOfTerms) == 1:
-            return listOfTerms[0]
+            return str(listOfTerms[0])
         else:
             sumOfTerms = self._addition(listOfTerms[0], listOfTerms[1], destinationBase)
             for i in range(2, len(listOfTerms)):
                 sumOfTerms = self._addition(sumOfTerms, listOfTerms[i] ,destinationBase)
-            return sumOfTerms
+            return str(sumOfTerms)
         
     
     def _conversionByRepeatedDivision(self, number, destinationBase):
-        pass
+        remainders = []
+        
+        while str(number) != "0":
+            number, remainder = self._division(number, destinationBase, number.getBase())
+            remainders.insert(0, remainder)
+        
+        return self._listIntToBaseString(remainders)
     
     # Arithmetic operations
     
@@ -55,16 +61,16 @@ class Controller:
             term2.lengthen(len(term1))
         
         index = len(term1) - 1
-        extra = 0
+        carry = 0
         _sum = []
         
         while index >= 0:
-            _sum.insert(0, (term1[index] + term2[index] + extra) % base)
-            extra = (term1[index] + term2[index] + extra) // base
+            _sum.insert(0, (term1[index] + term2[index] + carry) % base)
+            carry = (term1[index] + term2[index] + carry) // base
             index -= 1
         
-        if extra != 0:
-            _sum.insert(0, extra)
+        if carry != 0:
+            _sum.insert(0, carry)
         
         return Number(self._listIntToBaseString(_sum), base)
         
@@ -73,7 +79,16 @@ class Controller:
     def _multiplication(self, factor1, factor2, base):
         pass
     def _division(self, divident, divisor, base):
-        pass
+        quotient = []
+        remainder = 0
+        index = 0
+        
+        while index < len(divident):
+            quotient.append((remainder * base + divident[index]) // divisor)
+            remainder = (remainder * base + divident[index]) % divisor
+            index += 1
+        
+        return Number(self._listIntToBaseString(quotient),base), remainder
     
     def _listIntToBaseString(self, listInt):
         baseString = ""
@@ -93,3 +108,8 @@ class Controller:
         return self._validator.checkValidBase(base)
     def checkValidNumber(self, number, base):
         return self._validator.checkValidNumber(number, base)
+
+    def trim(self, value):
+        while len(value) > 1 and value[0] == '0':
+            value = value[1:]
+        return value

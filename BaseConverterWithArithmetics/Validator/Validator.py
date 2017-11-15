@@ -33,9 +33,6 @@ class Validator:
         
         if number == "":
             return -1
-        
-        if number[0] == '-' or number[0] == '+':
-            number = number[1:]
             
         for digit in number:
             if digit not in baseDigits:

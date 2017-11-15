@@ -39,16 +39,44 @@ class UI:
             print("The two bases must not be the same!")
             destinationBase = self._readBase("\nChoose a base (2 to 16) to which the number should be converted: ")
         
-        convertedNumber = self._controller.convertDirectly(strNumber, sourceBase, destinationBase)
-        os.system('CLS')
-        self._printTitle()
-        print("The number " + strNumber + " converted from base " + str(sourceBase) + " to base " + str(destinationBase) + " is " + str(convertedNumber))
-        input("\n\nPress Enter to continue...")
+        self._printDirectConversionResult(self._controller.trim(strNumber), sourceBase, self._controller.convertDirectly(strNumber, sourceBase, destinationBase), destinationBase)
+
         
     def _IndirectConversions(self):
-        pass
+        sourceBase = self._readBase("\nChoose a base (2 to 16): ")
+        strNumber = self._readNumber(sourceBase)
+        destinationBase = self._readBase("\nChoose a base (2 to 16) to which the number should be converted: ")
+        while sourceBase == destinationBase:
+            print("The two bases must not be the same!")
+            destinationBase = self._readBase("\nChoose a base (2 to 16) to which the number should be converted: ")
+        intermediaryBase = self._readBase("\nChoose an intermediary base (2 to 16) through which the number should be converted: ")
+        while intermediaryBase == sourceBase or intermediaryBase == destinationBase:
+            print("The intermediary base must be different than the previous two bases!")
+            intermediaryBase = self._readBase("\nChoose an intermediary base (2 to 16) through which the number should be converted: ")
+
+        intermediaryNumber = self._controller.convertDirectly(strNumber, sourceBase, intermediaryBase)
+
+        self._printIndirectConversionResult(self._controller.trim(strNumber), sourceBase, intermediaryNumber, intermediaryBase, self._controller.convertDirectly(intermediaryNumber, intermediaryBase, destinationBase), destinationBase)
+        
     def _QuickConversions(self):
-        pass
+        permittedBases = [2,3,8,16]
+        sourceBase = self._readBase("\nChoose a base (2, 4, 8 or 16): ")
+        while sourceBase not in permittedBases:
+            print("The base must be one of (2, 4, 8 or 16)")
+            sourceBase = self._readBase("\nChoose a base (2, 4, 8 or 16): ")
+        
+        validBase = False
+        while not validBase:
+            destinationBase = self._readBase("\nChoose a base (2, 4, 8 or 16): ")
+            while sourceBase not in permittedBases:
+                print("The base must be one of (2, 4, 8 or 16)")
+                sourceBase = self._readBase("\nChoose a base (2, 4, 8 or 16): ")
+            if sourceBase == destinationBase:
+                print("The two bases must not be the same!")
+            else:
+                validBase = True
+                
+        strNumber = self._readNumber(sourceBase)
     
     # Arithmetics menu methods
     
@@ -103,7 +131,7 @@ class UI:
             validationCode = self._controller.checkValidNumber(number, base)
             
             if validationCode == -1:
-                print("The number can't be zero or null.")
+                print("The number can't be null.")
             elif validationCode == -2:
                 print("That number is not written in base " + str(base) + "!")
             else:
@@ -131,4 +159,16 @@ class UI:
                                       >>> Base converter with arithmetics <<<
 '''
         print(title)
+
+    def _printDirectConversionResult(self, sourceNumber, sourceBase, convertedNumber, destinationBase):
+        os.system('CLS')
+        self._printTitle()
+        print("The number " + sourceNumber + " converted from base " + str(sourceBase) + " to base " + str(destinationBase) + " is " + convertedNumber)
+        input("\n\nPress Enter to continue...")
     
+    def _printIndirectConversionResult(self, sourceNumber, sourceBase, intermediaryNumber, intermediaryBase, convertedNumber, destinationBase):
+        os.system('CLS')
+        self._printTitle()
+        print("The number " + sourceNumber + " converted from base " + str(sourceBase) + " to base " + str(intermediaryBase) + " is " + intermediaryNumber)
+        print("\nThe number " + intermediaryNumber + " converted from base " + str(intermediaryBase) + " to base " + str(destinationBase) + " is " + convertedNumber)
+        input("\n\nPress Enter to continue...")
