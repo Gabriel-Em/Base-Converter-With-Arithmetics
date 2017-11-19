@@ -39,7 +39,7 @@ class Controller:
         else:
             sumOfTerms = self._addition(listOfTerms[0], listOfTerms[1], destinationBase)
             for i in range(2, len(listOfTerms)):
-                sumOfTerms = self._addition(sumOfTerms, listOfTerms[i] ,destinationBase)
+                sumOfTerms = self._addition(sumOfTerms, listOfTerms[i] , destinationBase)
             return str(sumOfTerms)
         
     
@@ -50,8 +50,46 @@ class Controller:
             number, remainder = self._division(number, destinationBase, number.getBase())
             remainders.insert(0, remainder)
         
-        return self._listIntToBaseString(remainders)
-    
+        return self._listIntToBaseString(remainders)        
+        
+    def quickConvertToBase2(self, strNumber, sourceBase):
+        number = Number(strNumber, sourceBase)
+        
+        sizeOfGroup = 2
+        while 2 ** sizeOfGroup != sourceBase:
+            sizeOfGroup += 1
+        
+        convertedNumber = ""
+        for digit in number.getNumberAsListOfChar():
+            remainders = []
+            digit = Number(digit, sourceBase)
+            while str(digit) != '0':
+                digit, remainder = self._division(digit, 2, sourceBase)
+                remainders.insert(0, str(remainder))
+            if len(remainders) == 0:
+                remainders.append('0')
+            convertedNumber += self.lengthen(sizeOfGroup, ''.join(remainders))
+        
+        return self.trim(convertedNumber)
+        
+        
+    def quickConvertFromBase2(self, strNumber, destinationBase):
+        number = Number(strNumber, 2)
+        
+        sizeOfGroup = 2
+        while 2 ** sizeOfGroup != destinationBase:
+            sizeOfGroup += 1
+        
+        if len(number) % sizeOfGroup != 0:
+            number.lengthen(len(number) // sizeOfGroup * sizeOfGroup + sizeOfGroup)
+        
+        convertedNumber = ""
+        for i in range(0, len(number) // sizeOfGroup):
+            convertedNumber += self._conversionBySubstitution(Number(''.join(number.getNumberAsListOfChar()[i*sizeOfGroup:i*sizeOfGroup + sizeOfGroup]), 2), destinationBase)
+        
+        return convertedNumber
+            
+            
     # Arithmetic operations
     
     def _addition(self, term1, term2, base):
@@ -88,7 +126,7 @@ class Controller:
             remainder = (remainder * base + divident[index]) % divisor
             index += 1
         
-        return Number(self._listIntToBaseString(quotient),base), remainder
+        return Number(self._listIntToBaseString(quotient), base), remainder
     
     def _listIntToBaseString(self, listInt):
         baseString = ""
@@ -109,7 +147,13 @@ class Controller:
     def checkValidNumber(self, number, base):
         return self._validator.checkValidNumber(number, base)
 
-    def trim(self, value):
-        while len(value) > 1 and value[0] == '0':
-            value = value[1:]
-        return value
+    def trim(self, strNumber):
+        while len(strNumber) > 1 and strNumber[0] == '0':
+            strNumber = strNumber[1:]
+        return strNumber
+    
+    def lengthen(self, newLength, strNumber):
+        if newLength > len(strNumber):
+            for _ in range(newLength - len(strNumber)):
+                strNumber = "0" + strNumber
+        return strNumber
