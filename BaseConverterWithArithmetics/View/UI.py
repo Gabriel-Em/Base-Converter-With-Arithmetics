@@ -39,7 +39,7 @@ class UI:
             print("The two bases must not be the same!")
             destinationBase = self._readBase("\nChoose a base (2 to 16) to which the number should be converted: ")
         
-        self._printDirectConversionResult(self._controller.trim(strNumber), sourceBase, self._controller.convertDirectly(strNumber, sourceBase, destinationBase), destinationBase)
+        self._printDefaultConversionResult(self._controller.trim(strNumber), sourceBase, "None", "None", self._controller.convertDirectly(strNumber, sourceBase, destinationBase), destinationBase)
 
         
     def _IndirectConversions(self):
@@ -56,7 +56,7 @@ class UI:
 
         intermediaryNumber = self._controller.convertDirectly(strNumber, sourceBase, intermediaryBase)
 
-        self._printIndirectConversionResult(self._controller.trim(strNumber), sourceBase, intermediaryNumber, intermediaryBase, self._controller.convertDirectly(intermediaryNumber, intermediaryBase, destinationBase), destinationBase)
+        self._printDefaultConversionResult(strNumber, sourceBase, intermediaryNumber, intermediaryBase, self._controller.convertDirectly(intermediaryNumber, intermediaryBase, destinationBase), destinationBase)
         
     def _QuickConversions(self):
         permittedBases = [2, 4, 8, 16]
@@ -172,18 +172,15 @@ class UI:
                                       >>> Base converter with arithmetics <<<
 '''
         print(title)
-
-    def _printDirectConversionResult(self, sourceNumber, sourceBase, convertedNumber, destinationBase):
-        os.system('CLS')
-        self._printTitle()
-        print("The number " + sourceNumber + " converted from base " + str(sourceBase) + " to base " + str(destinationBase) + " is " + convertedNumber)
-        input("\n\nPress Enter to continue...")
     
-    def _printIndirectConversionResult(self, sourceNumber, sourceBase, intermediaryNumber, intermediaryBase, convertedNumber, destinationBase):
+    def _printDefaultConversionResult(self, sourceNumber, sourceBase, intermediaryNumber, intermediaryBase, convertedNumber, destinationBase):
         os.system('CLS')
         self._printTitle()
-        print("The number " + sourceNumber + " converted from base " + str(sourceBase) + " to base " + str(intermediaryBase) + " is " + intermediaryNumber)
-        print("\nThe number " + intermediaryNumber + " converted from base " + str(intermediaryBase) + " to base " + str(destinationBase) + " is " + convertedNumber)
+        if intermediaryNumber != "None":
+            print("The number " + self._controller.trim(sourceNumber) + " converted from base " + str(sourceBase) + " to base " + str(intermediaryBase) + " is " + intermediaryNumber)
+            print("\nThe number " + intermediaryNumber + " converted from base " + str(intermediaryBase) + " to base " + str(destinationBase) + " is " + convertedNumber)
+        else:
+            print("The number " + self._controller.trim(sourceNumber) + " converted from base " + str(sourceBase) + " to base " + str(destinationBase) + " is " + convertedNumber)
         input("\n\nPress Enter to continue...")
     
     def _printQuickConversionResult(self, sourceNumber, sourceBase, intermediaryNumber, convertedNumber, destinationBase):
@@ -203,7 +200,7 @@ class UI:
             newLength += len(intermediaryNumber) // groups * groups 
             intermediaryNumber = self._controller.lengthen(newLength, intermediaryNumber)
             
-            print("The number " + sourceNumber + " converted from base " + str(sourceBase) + " to base 2 is " + intermediaryNumber + " using the following steps:\n")
+            print("The number " + self._controller.trim(sourceNumber) + " converted from base " + str(sourceBase) + " to base 2 is " + self._controller.trim(intermediaryNumber) + " using the following steps:\n")
             
             for i in range (0, len(sourceNumber)):
                 print(sourceNumber[i] + " = " + intermediaryNumber[groups * i:groups * i + groups])
@@ -212,14 +209,15 @@ class UI:
             while 2 ** groups != destinationBase:
                 groups += 1
             
+            intermediaryNumber = self._controller.trim(intermediaryNumber)
             if len(intermediaryNumber) % groups != 0:
                 newLength = groups
             else:
                 newLength = 0
-            intermediaryNumber = self._controller.trim(intermediaryNumber)
+            
             newLength += len(intermediaryNumber) // groups * groups
             intermediaryNumber = self._controller.lengthen(newLength, intermediaryNumber)
-            print("The number " + intermediaryNumber + " converted from base 2 to base " + str(destinationBase) + " is " + convertedNumber + " using the following steps:\n")
+            print("\nThe number " + self._controller.trim(intermediaryNumber) + " converted from base 2 to base " + str(destinationBase) + " is " + convertedNumber + " using the following steps:\n")
 
             for i in range(0, len(convertedNumber)):
                 print(intermediaryNumber[groups * i:groups * i + groups] + " = " + convertedNumber[i])
@@ -235,7 +233,7 @@ class UI:
                     newLength = 0
                 newLength += len(sourceNumber) // groups * groups
                 sourceNumber = self._controller.lengthen(newLength, sourceNumber)
-                print("The number " + sourceNumber + " converted from base " + str(sourceBase) + " to base " + str(destinationBase) + " is " + convertedNumber + " using the following steps:\n")
+                print("The number " + self._controller.trim(sourceNumber) + " converted from base " + str(sourceBase) + " to base " + str(destinationBase) + " is " + convertedNumber + " using the following steps:\n")
                 for i in range(0,len(convertedNumber)):
                     print(sourceNumber[groups * i:groups * i + groups] + " = " + convertedNumber[i])
             else:
@@ -248,7 +246,7 @@ class UI:
                     newLength = 0
                 newLength += len(convertedNumber) // groups * groups
                 convertedNumber = self._controller.lengthen(newLength, convertedNumber)
-                print("The number " + sourceNumber + " converted from base " + str(sourceBase) + " to base " + str(destinationBase) + " is " + convertedNumber + " using the following steps:\n")
+                print("The number " + self._controller.trim(sourceNumber) + " converted from base " + str(sourceBase) + " to base " + str(destinationBase) + " is " + self._controller.trim(convertedNumber) + " using the following steps:\n")
                 for i in range(0,len(sourceNumber)):
                     print(sourceNumber[i] + " = " + convertedNumber[groups * i:groups * i + groups])
         
