@@ -5,6 +5,8 @@ class Controller:
     def __init__(self):
         self._validator = Validator()
     
+    # Conversion methods
+    
     def convertDirectly(self, strNumber, sourceBase, destinationBase):
         number = Number(strNumber, sourceBase)
         
@@ -12,8 +14,6 @@ class Controller:
             return self._conversionBySubstitution(number, destinationBase)
         else:
             return self._conversionByRepeatedDivision(number, destinationBase)
-    
-    # Conversion methods
     
     def _conversionBySubstitution(self, number, destinationBase):
         power = 0
@@ -89,7 +89,6 @@ class Controller:
         
         return convertedNumber
             
-            
     # Arithmetic operations
     
     def _addition(self, term1, term2, base):
@@ -128,16 +127,6 @@ class Controller:
         
         return Number(self._listIntToBaseString(quotient), base), remainder
     
-    def _listIntToBaseString(self, listInt):
-        baseString = ""
-        for digit in listInt:
-            if digit >= 0 and digit <= 9:
-                baseString += str(digit)
-            else:
-                baseString += chr(digit + (ord('A') - 10))
-        
-        return baseString
-    
     # validations
     
     def checkValidOption(self, opt, maxValue):
@@ -147,6 +136,8 @@ class Controller:
     def checkValidNumber(self, number, base):
         return self._validator.checkValidNumber(number, base)
 
+    # utility
+    
     def trim(self, strNumber):
         while len(strNumber) > 1 and strNumber[0] == '0':
             strNumber = strNumber[1:]
@@ -157,3 +148,13 @@ class Controller:
             for _ in range(newLength - len(strNumber)):
                 strNumber = "0" + strNumber
         return strNumber
+
+    def _listIntToBaseString(self, listInt):
+        baseString = ""
+        for digit in listInt:
+            if digit >= 0 and digit <= 9:
+                baseString += str(digit)
+            else:
+                baseString += chr(digit + (ord('A') - 10))
+        
+        return baseString
